@@ -1,0 +1,62 @@
+<odoo>
+	<data>
+		<record id="kb_school_action" model="ir.actions.act_window">
+			<field name="name">Schools</field>
+			<field name="res_model">kb.school</field>
+			<field name="view_mode">list,form</field>
+		</record>
+
+		<record id="kb_school_list_view" model="ir.ui.view">
+			<field name="name">kb_school_list_view</field>
+			<field name="model">kb.school</field>
+			<field name="arch" type="xml">
+				<list>
+					<field name="name"/>
+					<field name="company_id" groups="base.group_multi_company"/>
+				</list>
+			</field>
+		</record>
+
+		<record id="kb_school_form_view" model="ir.ui.view">
+			<field name="name">kb_school_form_view</field>
+			<field name="model">kb.school</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<label for="name"/>
+						<div class="oe_title">
+							<h1><field name="name"/></h1>
+						</div>
+						<group>
+							<group string="Address">
+								<label for="street"/>
+								<div>
+									<field name="street"/>
+									<field name="street2"/>
+								</div>
+								<field name="city"/>
+								<field name="state_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+								<field name="country_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+							</group>
+							<group string="Student Numbering">
+								<field name="student_number_sequence_id" string="Number Sequence" invisible="student_number_sequence_id == False"/>
+								<field name="seq_code_prefix" string="Number Prefix" invisible="student_number_sequence_id != False"/>
+								<field name="seq_number_padding" string="Number Padding" invisible="student_number_sequence_id != False"/>
+								<field name="seq_code_suffix" string="Number Suffix" invisible="student_number_sequence_id != False"/>
+								<div class="alert alert-info" colspan="2" invisible="student_number_sequence_id != False">
+									Here is what your student numbering sequence would look like:
+									<h4><field name="seq_test"/></h4>
+								</div>
+								<button string="Create Numbering" type="object" name="apply_numbering_sequence" icon="fa-plus-square-o" class="oe_highlight" invisible="student_number_sequence_id != False"/>
+								<button string="Reset Numbering" type="object" name="reset_numbering_sequence" icon="fa-minus-square-o" invisible="student_number_sequence_id == False" confirm="You are about to reset the numbering sequence of students in this school. Doing this will require you to set a new numbering sequence before any student can apply to this school. Do you want to continue?"/>
+							</group>
+							<group string="Company" groups="base.group_multi_company">
+								<field name="company_id"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>

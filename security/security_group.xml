@@ -1,0 +1,37 @@
+<odoo>
+	<data>
+		<record id="module_category_student_management" model="ir.module.category">
+			<field name="name">Student Management</field>
+			<field name="description">Help manage student application and student information.</field>
+			<field name="sequence">5</field>
+		</record>
+
+		<record id="group_0_student_management" model="res.groups">
+			<field name="name">Application Reception</field>
+			<field name="category_id" ref="module_category_student_management"/>
+			<field name="implied_ids" eval="[Command.link(ref('base.group_user'))]"/>
+		</record>
+
+		<record id="group_1_student_management" model="res.groups">
+			<field name="name">Student Manager</field>
+			<field name="category_id" ref="module_category_student_management"/>
+			<field name="implied_ids" eval="[Command.link(ref('group_0_student_management'))]"/>
+		</record>
+
+		<record id="group_2_student_management" model="res.groups">
+			<field name="name">Class Manager</field>
+			<field name="category_id" ref="module_category_student_management"/>
+			<field name="implied_ids" eval="[Command.link(ref('group_1_student_management'))]"/>
+		</record>
+
+		<record id="group_3_student_management" model="res.groups">
+			<field name="name">Administrator</field>
+			<field name="category_id" ref="module_category_student_management"/>
+			<field name="implied_ids" eval="[Command.link(ref('kb_student_base.group_2_student_management'))]"/>
+		</record>
+
+		<record id="group_application_document" model="res.groups">
+			<field name="name">Manage application &amp; student documents</field>
+		</record>
+	</data>
+</odoo>

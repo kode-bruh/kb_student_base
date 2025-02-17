@@ -1,0 +1,166 @@
+<odoo>
+	<data>
+		<record id="kb_application_action" model="ir.actions.act_window">
+			<field name="name">Student Applications</field>
+			<field name="res_model">kb.application</field>
+			<field name="view_mode">kanban,list,form</field>
+			<field name="context">{'search_default_group_by': 'stage_id'}</field>
+		</record>
+
+		<record id="kb_application_search_view" model="ir.ui.view">
+			<field name="name">kb_application_search_view</field>
+			<field name="model">kb.application</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name"/>
+					<field name="school_id"/>
+					<field name="stage_id"/>
+					<field name="gender"/>
+					<group expand="0" string="Group By">
+						<filter string="School" name="group_school" context="{'group_by': 'school_id'}"/>
+						<filter string="Nationality" name="group_nationality" context="{'group_by': 'nationality_id'}"/>
+						<filter string="Birth Date" name="group_birth_date" context="{'group_by': 'birth_date'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="kb_application_kanban_view" model="ir.ui.view">
+			<field name="name">kb_application_kanban_view</field>
+			<field name="model">kb.application</field>
+			<field name="arch" type="xml">
+				<kanban default_group_by="stage_id" group_create="False" group_delete="False" group_edit="False" groups_draggable="False">
+					<field name="stage_id"/>
+					<field name="name"/>
+					<field name="school_id"/>
+					<field name="image"/>
+					<field name="create_date"/>
+					<field name="write_date"/>
+					<templates>
+						<t t-name="card" class="flex-row">
+							<aside class="o_kanban_aside_full">
+								<t t-if="record.image.raw_value">
+									<field name="image" widget="image" options="{'zoom': true, 'zoom_delay': 1000}" class="d-block position-relative"/>
+								</t>
+								<div t-else="" class="d-flex align-items-center justify-content-center bg-100 bg-gradient">
+									<svg xmlns="http://www.w3.org/2000/svg" class="w-75 h-75 opacity-50" viewBox="0 0 20 20">
+										<g fill="currentColor">
+											<path d="M 10 11 C 4.08 11 2 14 2 16 L 2 19 L 18 19 L 18 16 C 18 14 15.92 11 10 11 Z"/>
+											<circle cx="10" cy="5.5" r="4.5"/>
+										</g>
+									</svg>
+								</div>
+							</aside>
+							<main class="ms-2">
+								<div>
+									<field class="fw-bold fs-5" name="name"/>
+								</div>
+								<field t-if="record.school_id.raw_value" name="school_id"/>
+								<footer>
+									<div class="d-flex ms-auto">
+										<field name="activity_ids" widget="kanban_activity" class="m-1 ms-2"/>
+									</div>
+								</footer>
+							</main>
+						</t>
+					</templates>
+				</kanban>
+			</field>
+		</record>
+
+		<record id="kb_application_list_view" model="ir.ui.view">
+			<field name="name">kb_application_list_view</field>
+			<field name="model">kb.application</field>
+			<field name="arch" type="xml">
+				<list>
+					<field name="name"/>
+					<field name="gender"/>
+					<field name="birth_date"/>
+					<field name="school_id"/>
+					<field name="nationality_id"/>
+					<field name="stage_id"/>
+					<!-- <field name="create_date" string="Applied on"/> -->
+				</list>
+			</field>
+		</record>
+
+		<record id="kb_application_form_view" model="ir.ui.view">
+			<field name="name">kb_application_form_view</field>
+			<field name="model">kb.application</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button string="Create Student" type="object" name="create_student_record" icon="fa-plus-square-o" invisible="not is_ready or student_id" class="oe_highlight"/>
+						<button string="Update Student" type="object" name="update_student_record" icon="fa-pencil-square-o" invisible="not is_ready or not student_id" class="oe_highlight"/>
+						<field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+					</header>
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+							<button name="view_student_record" type="object" icon="fa-user" help="View student related to this application" class="oe_stat_button" invisible="not student_id">
+								<div class="o_field_widget o_stat_info">
+									View Student
+								</div>
+							</button>
+							<button name="view_documents" type="object" icon="fa-files-o" help="View required documents for this application" class="oe_stat_button" invisible="not document_ids" groups="kb_student_base.group_application_document">
+								<div class="o_field_widget o_stat_info">
+									Required Documents
+								</div>
+							</button>
+						</div>
+						<field name="is_ready" invisible="True"/>
+						<field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
+						<label for="name"/>
+						<div class="oe_title">
+							<h1><field name="name"/></h1>
+						</div>
+						<group>
+							<group string="Applicant">
+								<field name="first_name"/>
+								<field name="middle_name"/>
+								<field name="last_name"/>
+								<field name="school_id" string="Applied to" placeholder="XYZ Junior High" options="{'no_create': 1, 'no_create_edit': 1}"/>
+							</group>
+							<group string="Personal Information">
+								<field name="birth_date"/>
+								<field name="gender"/>
+								<label for="blood_type"/>
+								<div>
+									<field name="blood_type"/>
+									<div class="alert alert-danger" invisible="blood_type not in ['ros', 'rhn']">
+										<i class="fa fa-exclamation-triangle"/> The applicant has a rare blood type. Please excercise utmost discretion before accepting the applicant.
+									</div>
+								</div>
+								<field name="blood_rhesus"/>
+								<field name="religion"/>
+								<field name="nationality_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+							</group>
+							<group string="Parent / Guardian">
+								<field name="father_name"/>
+								<field name="father_mobile"/>
+								<field name="mother_name"/>
+								<field name="mother_mobile"/>
+								<field name="has_guardian"/>
+								<field name="guardian_name" invisible="has_guardian == False"/>
+								<field name="guardian_mobile" invisible="has_guardian == False"/>
+							</group>
+							<group string="Address">
+								<label for="street"/>
+								<div>
+									<field name="street"/>
+									<field name="street2"/>
+								</div>
+								<field name="city"/>
+								<field name="state_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+								<field name="country_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+							</group>
+							<group string="Company" groups="base.group_multi_company">
+								<field name="company_id"/>
+							</group>
+						</group>
+					</sheet>
+					<chatter reload_on_attachment="True"/>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>

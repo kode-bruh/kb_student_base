@@ -1,0 +1,77 @@
+<odoo>
+	<data>
+		<record id="kb_class_action" model="ir.actions.act_window">
+			<field name="name">Classes</field>
+			<field name="res_model">kb.class</field>
+			<field name="view_mode">list,form</field>
+		</record>
+
+		<record id="kb_class_search_view" model="ir.ui.view">
+			<field name="name">kb_class_search_view</field>
+			<field name="model">kb.class</field>
+			<field name="arch" type="xml">
+				<search>
+					<field name="name"/>
+					<field name="school_id"/>
+					<field name="sequence"/>
+					<group expand="0" string="Group By">
+						<filter string="School" name="group_school" context="{'group_by': 'school_id'}"/>
+						<filter string="Sequence" name="group_sequence" context="{'group_by': 'sequence'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+
+		<record id="kb_class_list_view" model="ir.ui.view">
+			<field name="name">kb_class_list_view</field>
+			<field name="model">kb.class</field>
+			<field name="arch" type="xml">
+				<list>
+					<field name="company_id" groups="base.group_multi_company"/>
+					<field name="school_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+					<field name="class_name"/>
+					<field name="class_sub_name" string="Sub-class Name"/>
+				</list>
+			</field>
+		</record>
+
+		<record id="kb_class_form_view" model="ir.ui.view">
+			<field name="name">kb_class_form_view</field>
+			<field name="model">kb.class</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<label for="name"/>
+						<div class="oe_title">
+							<h1><field name="name"/></h1>
+						</div>
+						<group>
+							<group>
+								<field name="sequence"/>
+								<label for="class_name"/>
+								<div class="o_row">
+									<field name="class_name" placeholder="Name"/>
+									<field name="class_sub_name" placeholder="Subname"/>
+								</div>
+								<field name="school_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+							</group>
+							<group groups="base.group_multi_company">
+								<field name="company_id"/>
+							</group>
+						</group>
+						<notebook>
+							<page string="Help" name="help">
+								<p>Please read the guidelines below to configure classes:</p>
+                                <ul>
+                                    <li><strong>Sequence</strong>: A number which indicates classes sorting in ascending order. For example, a student in class 'I' (with sequence 1) are going up into class 'II' (with sequence 2)</li>
+                                    <li><strong>Class Name</strong>: Name of the class, can be numerical or alphabetical.</li>
+                                    <li><strong>Class Subname</strong>: record on which the action is triggered; may be be void</li>
+                                </ul>
+							</page>
+						</notebook>
+					</sheet>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>

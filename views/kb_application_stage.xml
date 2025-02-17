@@ -1,0 +1,49 @@
+<odoo>
+	<data>
+		<record id="kb_application_stage_action" model="ir.actions.act_window">
+			<field name="name">Application Stages</field>
+			<field name="res_model">kb.application.stage</field>
+			<field name="view_mode">list,form</field>
+		</record>
+
+		<record id="kb_application_stage_list_view" model="ir.ui.view">
+			<field name="name">kb_application_stage_list_view</field>
+			<field name="model">kb.application.stage</field>
+			<field name="arch" type="xml">
+				<list>
+					<field name="sequence" widget="handle"/>
+					<field name="name"/>
+					<field name="is_acceptance_stage"/>
+					<field name="fallback_stage_id"/>
+					<field name="company_id" groups="base.group_multi_company"/>
+				</list>
+			</field>
+		</record>
+
+		<record id="kb_application_stage_form_view" model="ir.ui.view">
+			<field name="name">kb_application_stage_form_view</field>
+			<field name="model">kb.application.stage</field>
+			<field name="arch" type="xml">
+				<form>
+					<sheet>
+						<label for="name"/>
+						<div class="oe_title">
+							<h1><field name="name"/></h1>
+						</div>
+						<group>
+							<group string="Stage Settings">
+								<field name="sequence"/>
+								<field name="is_acceptance_stage"/>
+								<field name="fallback_stage_id"/>
+							</group>
+							<group string="Documents" groups="kb_student_base.group_application_document">
+								<field name="require_document"/>
+								<field name="template_ids" widget="many2many_tags" invisible="not require_document" required="require_document" options="{'no_create': 1, 'no_create_edit': 1}"/>
+							</group>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>

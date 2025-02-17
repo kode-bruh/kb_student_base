@@ -1,0 +1,193 @@
+<odoo>
+	<data>
+		<template id="portal_my_home_application_breadcrumb" name="Portal: Application Breadcrumbs" inherit_id="portal.portal_breadcrumbs" priority="20">
+			<xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+				<li t-if="page_name == 'application_list' or application" t-attf-class="breadcrumb-item #{'active ' if not application else ''}">
+					<a t-if="application" t-attf-href="/my/application">Applications</a>
+					<t t-else="">Applications</t>
+				</li>
+				<li t-if="application" class="breadcrumb-item active">
+					<span t-field="application.name"/>
+				</li>
+			</xpath>
+		</template>
+
+		<template id="portal_my_home_application" name="Applications" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+			<xpath expr="//div[hasclass('o_portal_docs')]" position="before">
+				<t t-set="portal_client_category_enable" t-value="True"/>
+			</xpath>
+			<div id="portal_client_category" position="inside">
+				<t t-call="portal.portal_docs_entry">
+					<t t-set="icon" t-value="'/kb_student_base/static/src/img/portal_icon.svg'"/>
+					<t t-set="title">My Applications</t>
+					<t t-set="url" t-value="'/my/application'"/>
+					<t t-set="text">Create, track and edit your children's student application.</t>
+					<t t-set="placeholder_count" t-value="'application_count'"/>
+				</t>
+			</div>
+		</template>
+		
+		<template id="portal_my_home_application_list" name="My Applications">
+			<t t-call="portal.portal_layout">
+				<t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+				<t t-call="portal.portal_searchbar">
+					<t t-set="title">My Applications</t>
+				</t>
+				<div t-if="not applications" class="alert alert-warning" role="alert">
+					You have not submit any application.
+				</div>
+				<t t-if="applications" t-call="portal.portal_table">
+					<thead>
+						<tr class="active">
+							<th>Applicant Name</th>
+							<th>Gender</th>
+							<th class="text-end">Birth Date</th>
+							<th>Applied To</th>
+							<th>Required Documents</th>
+							<th>Stage</th>
+						</tr>
+					</thead>
+					<t t-foreach="applications" t-as="application">
+						<tr>
+							<td><a t-attf-href="{{ '/my/application/%s?access_token=%s' % (application.id, application.access_token) }}"><t t-out="application.name"/> <i class="fa fa-external-link"/></a></td>
+							<td><t t-out="application.school_id.name"/></td>
+							<td><t t-out="application.birth_date"/></td>
+							<td ><t t-out="application.gender"/></td>
+							<td><span class="badge rounded-pill bg-primary"><t t-out="application.stage_id.name"/></span></td>
+							<td><t t-out="len(application.document_ids)"/></td>
+						</tr>
+					</t>
+				</t>
+			</t>
+		</template>
+	
+		<template id="application_portal_template" name="Student Application" inherit_id="portal.portal_sidebar" primary="True">
+			<xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+				<div class="row">
+					<t t-call="portal.portal_record_sidebar" id="student_application_portal_sidebar">
+						<t t-set="classes" t-value="'col-lg-4 col-xxl-3'"/>
+
+						<t t-set="title">
+							<h2 class="mb-0 text-break">Test Title</h2>
+						</t>
+						<t t-set="entries">
+							<div class="d-flex flex-column gap-4 mt-3">
+								<div class="d-flex flex-column gap-2">
+									<div class="o_download_pdf d-flex gap-2 flex-lg-column flex-xl-row flex-wrap">
+										<a class="btn btn-light o_print_btn flex-grow-1" title="Download" role="button" target="_blank" t-attf-href="{{ '/my/application/%s?access_token=%s&amp;report_type=pdf' % (application.id, application.access_token) }}"><i class="fa fa-print me-1"/>Download</a>
+									</div>
+								</div>
+							</div>
+						</t>
+					</t>
+
+					<div id="main-content" class="col-12 col-lg-8 col-xxl-9 mt-5 mt-lg-0">
+						<div id="introduction" class="border-bottom-0 pt-0 pb-3">
+							<div class="d-flex gap-2" id="intro_row">
+								<h2>
+									Application - 
+									<em t-if="application" t-out="application.name"/> 
+									<em t-else="">New</em> 
+								</h2>
+							</div>
+						</div>
+
+						<div id="content">
+							<form t-attf-action="{{'/my/application/%s/save' % application.id if application else '/my/application/save'}}" method="post" enctype="multipart/form-data">
+								<input type="hidden" name="access_token" t-attf-value="{{application.access_token if application else ''}}"/>
+								<input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+								<div class="row">
+									<div id="applicant-information" class="col-12 mt-4">
+										<span>
+											<h5 class="mb-1">Applicant Information</h5>
+											<hr class="mt-1 mb-2"/>
+										</span>
+										<p class="text-muted"><em><i class="fa fa-exclamation-triangle"/> Please fill out these fields.</em></p>
+										<label for="first-name" class="form-label">Applicant Name*</label>
+										<div class="input-group mb-3">
+											<input type="text" class="form-control" id="first-name" name="first-name" placeholder="First name" required="" t-attf-value="{{application.first_name if application else ''}}"/>
+											<input type="text" class="form-control" id="middle-name" name="middle-name" placeholder="Middle name" t-attf-value="{{application.middle_name if application else ''}}"/>
+											<input type="text" class="form-control" id="last-name" name="last-name" placeholder="Last name" t-attf-value="{{application.last_name if application else ''}}"/>
+										</div>
+										<div class="mb-3">
+											<label for="birth-date" class="form-label">Birth Date*</label>
+											<input type="date" class="form-control" id="birth-date" name="birth-date" required="" t-attf-value="{{application.birth_date if application else ''}}"/>
+										</div>
+										<div class="mb-3">
+											<label for="gender" class="form-label">Gender*</label>
+											<select class="form-control" id="gender" name="gender" required="" >
+												<option selected="" disabled="">Select gender</option>
+												<option t-if="application and application.gender=='Male'" value="Male" selected="">Male</option>
+												<option t-else="" value="Male">Male</option>
+												<option t-if="application and application.gender=='Female'" value="Female" selected="">Female</option>
+												<option t-else="" value="Female">Female</option>
+											</select>
+										</div>
+										<div class="mb-3">
+											<label for="school" class="form-label">Applying to*</label>
+											<select class="form-control" id="school" name="school" required="">
+												<option selected="" disabled="">Select school</option>
+												<t t-foreach="schools" t-as="school">
+													<option t-if="application and school.id == application.school_id.id" selected="" t-att-value="school.id"><t t-out="school.name"/></option>
+													<option t-else="" t-att-value="school.id"><t t-out="school.name"/></option>
+												</t>
+											</select>
+										</div>
+									</div>
+									<div id="parent-information" class="col-12 mt-4">
+										<span>
+											<h5 class="mb-1">Parent / Guardian Information</h5>
+											<hr class="mt-1 mb-2"/>
+										</span>
+										<p class="text-muted"><em><i class="fa fa-exclamation-triangle"/> Please fill out these fields.</em></p>
+										<label for="father-name" class="form-label">Father Information</label>
+										<div class="input-group mb-3">
+											<input type="text" class="form-control" id="father-name" name="father-name" placeholder="Father's name" t-attf-value="{{application.father_name if application else ''}}"/>
+											<input type="text" class="form-control" id="father-phone" name="father-phone" placeholder="Phone / mobile" t-attf-value="{{application.father_mobile if application else ''}}"/>
+										</div>
+										<label for="mother-name" class="form-label">Mother Information</label>
+										<div class="input-group mb-3">
+											<input type="text" class="form-control" id="mother-name" name="mother-name" placeholder="Mother's name" t-attf-value="{{application.mother_name if application else ''}}"/>
+											<input type="text" class="form-control" id="mother-phone" name="mother-phone" placeholder="Phone / mobile" t-attf-value="{{application.mother_mobile if application else ''}}"/>
+										</div>
+										<label for="guardian-name" class="form-label">Guardian Information (if any)</label>
+										<div class="input-group mb-3">
+											<input type="text" class="form-control" id="guardian-name" name="guardian-name" placeholder="Guardian's name" t-attf-value="{{application.guardian_name if application else ''}}"/>
+											<input type="text" class="form-control" id="guardian-phone" name="guardian-phone" placeholder="Phone / mobile" t-attf-value="{{application.guardian_mobile if application else ''}}"/>
+										</div>
+									</div>
+									<div id="document-required" class="col-12 mt-4" t-if="application.document_ids">
+										<span>
+											<h5 class="mb-1">Required Documents</h5>
+											<hr class="mt-1 mb-2"/>
+										</span>
+										<p class="text-muted"><em><i class="fa fa-exclamation-triangle"/> Please fill out these fields.</em></p>
+										<label for="father-name" class="form-label">Father Information</label>
+										<div class="input-group mb-3">
+											<input type="text" class="form-control" id="father-name" name="father-name" placeholder="Father's name" t-attf-value="{{application.father_name if application else ''}}"/>
+											<input type="text" class="form-control" id="father-phone" name="father-phone" placeholder="Phone / mobile" t-attf-value="{{application.father_mobile if application else ''}}"/>
+										</div>
+										<label for="mother-name" class="form-label">Mother Information</label>
+										<div class="input-group mb-3">
+											<input type="text" class="form-control" id="mother-name" name="mother-name" placeholder="Mother's name" t-attf-value="{{application.mother_name if application else ''}}"/>
+											<input type="text" class="form-control" id="mother-phone" name="mother-phone" placeholder="Phone / mobile" t-attf-value="{{application.mother_mobile if application else ''}}"/>
+										</div>
+										<label for="guardian-name" class="form-label">Guardian Information (if any)</label>
+										<div class="input-group mb-3">
+											<input type="text" class="form-control" id="guardian-name" name="guardian-name" placeholder="Guardian's name" t-attf-value="{{application.guardian_name if application else ''}}"/>
+											<input type="text" class="form-control" id="guardian-phone" name="guardian-phone" placeholder="Phone / mobile" t-attf-value="{{application.guardian_mobile if application else ''}}"/>
+										</div>
+									</div>
+									<div class="col-12 mt-4">
+										<button class="btn btn-primary" type="submit"><i class="fa fa-paper-plane"/> Submit Application</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</xpath>
+		</template>
+	</data>
+</odoo>

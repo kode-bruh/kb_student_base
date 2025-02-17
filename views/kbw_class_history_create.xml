@@ -1,0 +1,59 @@
+<odoo>
+	<data>
+		<record id="kbw_class_history_create_action" model="ir.actions.act_window">
+			<field name="name">Create Student Class</field>
+			<field name="res_model">kbw.class.history.create</field>
+			<field name="view_mode">list,form</field>
+		</record>
+
+		<record id="kbw_class_history_create_wizard_action" model="ir.actions.act_window">
+            <field name="name">Create Student Class</field>
+            <field name="res_model">kbw.class.history.create</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="kb_student_base.model_kb_student"/>
+        </record>
+
+		<record id="kbw_class_history_create_list_view" model="ir.ui.view">
+			<field name="name">kbw_class_history_create_list_view</field>
+			<field name="model">kbw.class.history.create</field>
+			<field name="arch" type="xml">
+				<list>
+					<field name="name"/>
+					<field name="state"/>
+				</list>
+			</field>
+		</record>
+
+		<record id="kbw_class_history_create_form_view" model="ir.ui.view">
+			<field name="name">kbw_class_history_create_form_view</field>
+			<field name="model">kbw.class.history.create</field>
+			<field name="arch" type="xml">
+				<form>
+					<header>
+						<button string="Validate" type="object" name="validate_class" class="oe_highlight" invisible="state != 'draft'"/>
+						<button string="Approve" type="object" name="approve_class" class="oe_highlight" invisible="state != 'to_approve'" groups="kb_student_base.group_2_student_management"/>
+						<field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+					</header>
+					<sheet>
+						<label for="name"/>
+						<div class="oe_title">
+							<h1><field name="name"/></h1>
+						</div>
+						<group string="Students">
+							<field name="line_ids" nolabel="1" colspan="2" readonly="state != 'draft'">
+								<list editable="bottom">
+									<field name="student_id" options="{'no_create': 1, 'no_create_edit': 1}"/>
+									<field name="current_class"/>
+									<field name="next_class_id" string="Class" options="{'no_create': 1, 'no_create_edit': 1}"/>
+									<field name="next_term_id" string="Term" options="{'no_create': 1, 'no_create_edit': 1}"/>
+								</list>
+							</field>
+						</group>
+					</sheet>
+					<chatter reload_on_attachment="True"/>
+				</form>
+			</field>
+		</record>
+	</data>
+</odoo>

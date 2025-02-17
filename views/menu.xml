@@ -1,0 +1,26 @@
+<odoo>
+	<data>
+		<!-- Students -->
+		<menuitem id="student_base_root_menu" name="Students" sequence="100"/>
+
+		<menuitem id="application_menu" name="Application" parent="student_base_root_menu" action="kb_application_action" sequence="10"/>
+		<menuitem id="student_menu" name="Student" parent="student_base_root_menu" action="kb_student_action" sequence="20"/>
+
+		<menuitem id="student_base_student_manage_root_menu" name="Manage" parent="student_base_root_menu" sequence="290"/>
+		<menuitem id="student_base_bulk_edit_root_menu" name="Bulk Create" parent="student_base_student_manage_root_menu" sequence="10"/>
+		<menuitem id="class_history_manage_menu" name="Student Class" parent="student_base_bulk_edit_root_menu" action="kbw_class_history_create_action" sequence="10"/>
+
+		<menuitem id="student_base_configuration_root_menu" name="Configuration" parent="student_base_root_menu" sequence="300"/>
+		<menuitem id="student_base_setting_menu" name="Settings" parent="student_base_configuration_root_menu" action="student_base_setting_action" sequence="10"/>
+		<menuitem id="application_stage_menu" name="Application Stage" parent="student_base_configuration_root_menu" action="kb_application_stage_action" sequence="20"/>
+		<!-- <menuitem id="document_type_menu" name="Document Type" parent="student_base_configuration_root_menu" action="kb_document_type_action" sequence="30"/>
+		<menuitem id="application_document_template_menu" name="Document Template" parent="student_base_configuration_root_menu" action="kb_application_document_template_action" sequence="40"/> -->
+
+		<!-- Schools Configuration -->
+		<menuitem id="school_base_root_menu" name="Schools" sequence="99"/>
+
+		<menuitem id="school_menu" name="Schools" parent="school_base_root_menu" action="kb_school_action" sequence="10"/>
+		<menuitem id="class_menu" name="Classes" parent="school_base_root_menu" action="kb_class_action" sequence="20"/>
+		<menuitem id="term_menu" name="Terms" parent="school_base_root_menu" action="kb_term_action" sequence="30"/>
+	</data>
+</odoo>

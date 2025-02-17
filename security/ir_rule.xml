@@ -1,0 +1,86 @@
+<odoo>
+	<data>
+		<!-- Multi-company Rules -->
+		<record id="application_multi_company_rule" model="ir.rule">
+			<field name="name">Application: Multi-company Rule</field>
+			<field name="model_id" ref="model_kb_application"/>
+			<field name="domain_force">[('company_id', 'in', company_ids)]</field>
+		</record>
+
+		<record id="application_document_template_multi_company_rule" model="ir.rule">
+			<field name="name">Application Document Template: Multi-company Rule</field>
+			<field name="model_id" ref="model_kb_application_document_template"/>
+			<field name="domain_force">[('company_id', 'in', company_ids)]</field>
+		</record>
+
+		<record id="application_stage_multi_company_rule" model="ir.rule">
+			<field name="name">Application Stage: Multi-company Rule</field>
+			<field name="model_id" ref="model_kb_application_stage"/>
+			<field name="domain_force">[('company_id', 'in', company_ids)]</field>
+		</record>
+
+		<record id="class_multi_company_rule" model="ir.rule">
+			<field name="name">Class: Multi-company Rule</field>
+			<field name="model_id" ref="model_kb_class"/>
+			<field name="domain_force">[('company_id', 'in', company_ids)]</field>
+		</record>
+
+		<record id="document_type_multi_company_rule" model="ir.rule">
+			<field name="name">Document Type: Multi-company Rule</field>
+			<field name="model_id" ref="model_kb_document_type"/>
+			<field name="domain_force">[('company_id', 'in', company_ids)]</field>
+		</record>
+
+		<record id="school_multi_company_rule" model="ir.rule">
+			<field name="name">School: Multi-company Rule</field>
+			<field name="model_id" ref="model_kb_school"/>
+			<field name="domain_force">[('company_id', 'in', company_ids)]</field>
+		</record>
+
+		<record id="student_multi_company_rule" model="ir.rule">
+			<field name="name">Student: Multi-company Rule</field>
+			<field name="model_id" ref="model_kb_student"/>
+			<field name="domain_force">[('company_id', 'in', company_ids)]</field>
+		</record>
+
+		<record id="term_multi_company_rule" model="ir.rule">
+			<field name="name">Term: Multi-company Rule</field>
+			<field name="model_id" ref="model_kb_term"/>
+			<field name="domain_force">[('company_id', 'in', company_ids)]</field>
+		</record>
+
+		<!-- User-specific Rules -->
+		<record id="portal_application_rule" model="ir.rule">
+			<field name="name">Application: Portal Rule</field>
+			<field name="model_id" ref="model_kb_application"/>
+			<field name="domain_force">[('user_id', '=', user.id)]</field>
+			<field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+	        <field name="perm_unlink" eval="False"/>
+	        <field name="perm_write" eval="True"/>
+	        <field name="perm_read" eval="True"/>
+	        <field name="perm_create" eval="True"/>
+		</record>
+
+		<record id="portal_student_rule" model="ir.rule">
+			<field name="name">Student: Portal Rule</field>
+			<field name="model_id" ref="model_kb_student"/>
+			<field name="domain_force">[('user_id', '=', user.id)]</field>
+			<field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+	        <field name="perm_unlink" eval="False"/>
+	        <field name="perm_write" eval="True"/>
+	        <field name="perm_read" eval="True"/>
+	        <field name="perm_create" eval="True"/>
+		</record>
+
+		<record id="portal_student_document_rule" model="ir.rule">
+			<field name="name">Student Document: Portal Rule</field>
+			<field name="model_id" ref="model_kb_student_document"/>
+			<field name="domain_force">[('user_id', '=', user.id)]</field>
+			<field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+	        <field name="perm_unlink" eval="False"/>
+	        <field name="perm_write" eval="True"/>
+	        <field name="perm_read" eval="True"/>
+	        <field name="perm_create" eval="False"/>
+		</record>
+	</data>
+</odoo>
